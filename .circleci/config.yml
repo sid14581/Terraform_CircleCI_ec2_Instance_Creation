@@ -4,7 +4,7 @@ version: 2.1
 orbs:
   terraform: circleci/terraform@1.2.1
 workflows:
-  deploy_ec2_infra:
+  deploy_infra:
     jobs:
     - terraform/validate:
         checkout: true
@@ -12,7 +12,7 @@ workflows:
     - terraform/plan:
         checkout: true
         context: terraform
-        persistent-workspace: true
+        persist-workspace: true
         requires:
         - terraform/validate
     - terraform/apply:
@@ -20,6 +20,6 @@ workflows:
         context: terraform
         filters:
           branches:
-            only: master  
+            only: main
         requires:
         - terraform/plan
