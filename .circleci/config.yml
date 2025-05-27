@@ -1,101 +1,101 @@
 # 2 methods to deploy terraform code in circleci
 
-# first method  is commneted 
-# for second method is  scroll down to the end of the file
+# for second method scroll down to the end of the file
 
 
 # Method 1: Using custom commands and jobs
 
-# version: 2.1
-
-# executors:
-#   terraform-executor:
-#     docker:
-#       - image: hashicorp/terraform:latest
-
-# commands:
-#   terraform-init:
-#     steps:
-#       - run:
-#           name: terraform init
-#           command: |
-#             terraform init
-
-# jobs:
-#   terraform-validate:
-#     executor: terraform-executor
-#     steps:
-#       - checkout
-#       - terraform-init
-#       - run :
-#           name: terraform validate
-#           command: |
-#             terraform validate
-
-#   terraform-plan:
-#     executor: terraform-executor
-#     steps:
-#       - checkout
-#       - terraform-init
-#       - run :
-#           name: terraform plan
-#           command: |
-#             terraform plan
-
-#   terraform-apply:
-#     executor: terraform-executor
-#     steps:
-#       - checkout
-#       - terraform-init
-#       - run :
-#           name: terraform apply
-#           command: |
-#             terraform apply -auto-approve
-
-# workflows:
-#   deploy_ec2_infra:
-#     jobs:
-#     - terraform-validate:
-#         context: terraform
-#     - terraform-plan:
-#         context: terraform
-#         requires:
-#         - terraform-validate
-#     - terraform-apply:
-#         context: terraform
-#         filters:
-#           branches:
-#             only: main
-#         requires:
-#         - terraform-plan
-
-
-
-
-
---- 
-# https://circleci.com/developer/orbs/orb/circleci/terraform
 version: 2.1
-orbs:
-  terraform: circleci/terraform@3.6.0
+
+executors:
+  terraform-executor:
+    docker:
+      - image: hashicorp/terraform:latest
+
+commands:
+  terraform-init:
+    steps:
+      - run:
+          name: terraform init
+          command: |
+            terraform init
+
+jobs:
+  terraform-validate:
+    executor: terraform-executor
+    steps:
+      - checkout
+      - terraform-init
+      - run :
+          name: terraform validate
+          command: |
+            terraform validate
+
+  terraform-plan:
+    executor: terraform-executor
+    steps:
+      - checkout
+      - terraform-init
+      - run :
+          name: terraform plan
+          command: |
+            terraform plan
+
+  terraform-apply:
+    executor: terraform-executor
+    steps:
+      - checkout
+      - terraform-init
+      - run :
+          name: terraform apply
+          command: |
+            terraform apply -auto-approve
 
 workflows:
   deploy_ec2_infra:
     jobs:
-    - terraform/validate:
-        checkout: true
+    - terraform-validate:
         context: terraform
-    - terraform/plan:
-        checkout: true
+    - terraform-plan:
         context: terraform
-        persist-workspace: true
         requires:
-        - terraform/validate
-    - terraform/apply:
-        attach-workspace: true
+        - terraform-validate
+    - terraform-apply:
         context: terraform
         filters:
           branches:
             only: main
         requires:
-        - terraform/plan
+        - terraform-plan
+
+
+
+
+# Method 2: Using CircleCI Terraform Orb
+
+# --- 
+# # https://circleci.com/developer/orbs/orb/circleci/terraform
+# version: 2.1
+# orbs:
+#   terraform: circleci/terraform@3.6.0
+
+# workflows:
+#   deploy_ec2_infra:
+#     jobs:
+#     - terraform/validate:
+#         checkout: true
+#         context: terraform
+#     - terraform/plan:
+#         checkout: true
+#         context: terraform
+#         persist-workspace: true
+#         requires:
+#         - terraform/validate
+#     - terraform/apply:
+#         attach-workspace: true
+#         context: terraform
+#         filters:
+#           branches:
+#             only: main
+#         requires:
+#         - terraform/plan
