@@ -1,8 +1,10 @@
-# --- 2 methods to deploy terraform code in circleci
+# 2 methods to deploy terraform code in circleci
+
 # first method  is commneted 
 # for second method is  scroll down to the end of the file
 
 
+# Method 1: Using custom commands and jobs
 
 # version: 2.1
 
@@ -66,6 +68,7 @@
 #             only: main
 #         requires:
 #         - terraform-plan
+
 
 
 
