@@ -3,6 +3,12 @@
 version: 2.1
 orbs:
   terraform: circleci/terraform@3.6.0
+
+executors:
+  terraform-executor:
+    docker:
+      - image: hashicorp/terraform:latest
+
 workflows:
   deploy_ec2_infra:
     jobs:
@@ -12,14 +18,14 @@ workflows:
     - terraform/plan:
         checkout: true
         context: terraform
-        persist-workspace: true
-        requires:
-        - terraform/validate
+        # persist-workspace: true
+        # requires:
+        # - terraform/validate
     - terraform/apply:
         attach-workspace: true
         context: terraform
         filters:
           branches:
             only: main
-        requires:
-        - terraform/plan
+        # requires:
+        # - terraform/plan
