@@ -7,15 +7,20 @@ executors:
     docker:
       - image: hashicorp/terraform:latest
 
+commands:
+  terraform-init:
+    steps:
+      - run:
+          name: terraform init
+          command: |
+            terraform init
+
 jobs:
   terraform-validate:
     executor: terraform-executor
     steps:
       - checkout
-      - run: 
-          name: terraform init
-          command: |
-            terraform init
+      - terraform-init
       - run :
           name: terraform validate
           command: |
@@ -25,10 +30,7 @@ jobs:
     executor: terraform-executor
     steps:
       - checkout
-      - run :
-          name: terraform init
-          command: |
-            terraform init
+      - terraform-init
       - run :
           name: terraform plan
           command: |
@@ -38,10 +40,7 @@ jobs:
     executor: terraform-executor
     steps:
       - checkout
-      - run :
-          name: terraform init
-          command: |
-            terraform init
+      - terraform-init
       - run :
           name: terraform apply
           command: |
