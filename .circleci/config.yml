@@ -1,4 +1,8 @@
-# ---
+# --- 2 methods to deploy terraform code in circleci
+# first method  is commneted 
+# for second method is  scroll down to the end of the file
+
+
 
 # version: 2.1
 
@@ -81,11 +85,11 @@ workflows:
     - terraform/plan:
         checkout: true
         context: terraform
-        # persist-workspace: true
+        persist-workspace: true
         requires:
         - terraform/validate
     - terraform/apply:
-        # attach-workspace: true
+        attach-workspace: true
         context: terraform
         filters:
           branches:
